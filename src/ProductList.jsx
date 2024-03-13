@@ -34,33 +34,34 @@ function ProductList({ products, addToCart, removeFromCart, cart }) {
                     {product.sale && (
                       <div>
                         {[...Array(5)].map((_, index) => (
-                          <MdStar key={index} style={{ color: 'gold' }} size={20} />
+                          <MdStar key={index} style={{ color: 'green' }} size={20} />
                         ))}
                       </div>
                     )}
                     {/* Product price */}
-                    <p>{product.price}</p>
+                    <p>${product.price}</p>
                   </div>
                 </div>
                 <div className="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                  <div className="text-center">
-                    {/* Add to cart or remove from cart button */}
-                    {cart.includes(product.id) ? (
-                      <button
-                        className="btn btn-outline-danger mt-auto"
-                        onClick={() => removeFromCart(product.id)}
-                      >
-                        Remove from Cart
-                      </button>
-                    ) : (
-                      <button
-                        className="btn btn-outline-dark mt-auto"
-                        onClick={() => addToCart(product.id)}
-                      >
-                        Add to Cart
-                      </button>
-                    )}
-                  </div>
+                <div className="text-center">
+  {/* Add to cart or remove from cart button */}
+  {cart.map((cartProduct) => cartProduct.id).includes(product.id) ? (
+    <button
+      className="btn btn-outline-danger mt-auto"
+      onClick={() => removeFromCart(product)} // Call removeFromCart with product id
+    >
+      Remove from Cart
+    </button>
+  ) : (
+    <button
+      className="btn btn-outline-dark mt-auto"
+      onClick={() => addToCart(product)} // Call addToCart with product id
+    >
+      Add to Cart
+    </button>
+  )}
+</div>
+
                 </div>
               </div>
             </div>

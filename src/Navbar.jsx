@@ -1,23 +1,27 @@
 import React, { useState } from 'react';
 import { IoCartSharp } from 'react-icons/io5';
 
-// Navbar component
-function Navbar({ cartQuantity }) {
-  // State variables for toggling navbar links and dropdown
+function Navbar({ cartQuantity, cart, removeFromCart,total }) {
   const [showLinks, setShowLinks] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // State for cart popup
 
-  // Toggle function for showing/hiding links
   const toggleLinks = () => {
     setShowLinks(!showLinks);
   };
 
-  // Toggle function for showing/hiding dropdown
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
-  // Render navbar JSX
+  const handleCartClick = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-xl">
@@ -37,7 +41,6 @@ function Navbar({ cartQuantity }) {
           }`}
         >
           <ul className="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-            {/* Navbar links */}
             <li className="nav-item">
               <a className="nav-link active" aria-current="page" href="#!">
                 Home
@@ -49,7 +52,6 @@ function Navbar({ cartQuantity }) {
               </a>
             </li>
             <li className={`nav-item dropdown ${showDropdown ? 'show' : ''}`}>
-              {/* Dropdown button */}
               <a
                 className="nav-link dropdown-toggle"
                 href="#"
@@ -59,7 +61,6 @@ function Navbar({ cartQuantity }) {
               >
                 Shop
               </a>
-              {/* Dropdown menu */}
               <ul
                 className={`dropdown-menu ${showDropdown ? 'show' : ''}`}
                 aria-labelledby="navbarDropdown"
@@ -85,18 +86,44 @@ function Navbar({ cartQuantity }) {
               </ul>
             </li>
           </ul>
-          {/* Cart button */}
-          <form className={`d-flex ${showLinks ? 'show' : ''}`}>
-            <button className="btn btn-outline-dark" type="submit">
+          <div className={`d-flex ${showLinks ? 'show' : ''}`}>
+            <button className="btn btn-outline-dark" type="button" onClick={handleCartClick}>
               <IoCartSharp size={25} />
               Cart
               <span className="badge bg-dark text-white ms-1 rounded-pill">
                 {cartQuantity}
               </span>
             </button>
-          </form>
+          </div>
         </div>
       </div>
+      {/* Render the popup if isPopupOpen is true */}
+      {isPopupOpen && (
+        <div className="cart-popup-overlay">
+          <div className="cart-popup-container">
+            <h1>Cart</h1>
+            <hr></hr>
+            {cart.length == 0 ? (
+            <div><h3>No Items in Cart</h3></div>
+          ) :(<>
+            <ul className="list-group">
+              {cart.map((product, index) => (
+                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <div className="fw-bold">{product.name}</div>
+                    <div>${product.price}</div>
+                  </div>
+                  <button onClick={() => removeFromCart(product)} className="btn btn-outline-danger">X</button>
+                </li>
+              ))}
+            </ul>
+              <h1>Total : ${total}</h1>
+              </>)}
+            
+            <button onClick={closePopup} className="btn btn-outline-dark mt-3" id='CartX'>Close</button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
